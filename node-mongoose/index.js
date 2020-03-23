@@ -13,25 +13,39 @@ connect.then((db)=>{
 
     console.log("Connceted sucessfully...");
 
-    var newDish = Dishes({
-        name : "singha",
-        description : "this is the description again"
-    });
-
-    newDish.save()
+    // var newDish = Dishes({
+    //     name : "singha",
+    //     description : "this is the description again"
+    // });
+    Dishes.create({
+        name : "bruce",
+        description : "wayne"  
+    })
     .then((result)=>{
 
         console.log("Dish saved",result);
 
-        return Dishes.find({});
+        return Dishes.findByIdAndUpdate(result._id,{$set : {name:"clark"}}
+        ,{
+            new:true
+         }
+        );
     })
-    .then((dishes)=>{
+    .then((dish)=>{
 
-        console.log(dishes);
+        console.log("Updated dish",dish);
 
-        return Dishes.deleteOne({name:"abhinav"});
+        dish.comments.push({
+            rating : 4,
+            comment : "this is the comment",
+            author : "Abhinav"
+        });
+
+        return dish.save();
     })
-    .then(()=>{
+    .then((dish)=>{
+
+        console.log(dish);
 
         return mongoose.connection.close();
     })
