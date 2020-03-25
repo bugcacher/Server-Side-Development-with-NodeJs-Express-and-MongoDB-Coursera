@@ -1,0 +1,15 @@
+{
+  "name": "node-mongodb",
+  "version": "1.0.0",
+  "description": "\"simple demonstration\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "\"Abhinav Singh\"",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "mongodb": "^3.5.5"
+  }
+}
