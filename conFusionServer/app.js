@@ -32,6 +32,8 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 //app.use(cookieParser('12345-09876'));
 
 app.use(session({
@@ -49,37 +51,14 @@ function auth(req,res,next){
 
   if(!req.session.user)
   {
-
-    var authHeader = req.headers.authorization;
-    if(!authHeader){
-
       var err = new Error('You are not authenticated');
-      res.setHeader('WWW-Authenticate','Basic');
-      err.status = 401;
+      err.status = 403;
       return next(err);
-    }
-
-    var auth = new Buffer(authHeader.split(' ')[1],'base64').toString().split(':');
-    var username = auth[0];
-    var password = auth[1];
-
-    if(username==='admin' && password ==='password'){
-      //res.cookie('user','admin',{signed : true});
-      req.session.user = 'admin';
-      next();
-    }
-    else{
-      
-      var err = new Error('You are not authenticated');
-      res.setHeader('WWW-Authenticate','Basic');
-      err.status = 401;
-      return next(err);
-    }
   }
 
   else{
 
-    if(req.session.user ==='admin')
+    if(req.session.user ==='authenticated')
     {
       next();
     }
@@ -99,8 +78,7 @@ app.use(auth);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 app.use('/dishes', dishRouter);
 app.use('/promotions', promoRouter);
 app.use('/leaders', leaderRouter);
