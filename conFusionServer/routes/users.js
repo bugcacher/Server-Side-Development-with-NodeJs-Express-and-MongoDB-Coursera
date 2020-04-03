@@ -14,21 +14,32 @@ router.get('/', function(req, res, next) {
 //for sign up
 
 router.post('/signup',(req,res,next)=>{
-  User.register(new User({username:req.body.username}),req.body.password,(err,user)=>{
+  User.register(new User({username:req.body.username}),req.body.password,(err,user)=>{ 
     if(err){
       res.statusCode = 500;
       res.setHeader('content-type','application/json');
       res.json({err:err});
     }
     else{
-      passport.authenticate('local')(req,res,()=>{
+      if(req.body.firstName)
+        user.firstName = req.body.firstName;
+      if(req.body.lastName)
+        user.lastName = req.body.lastName;
+      user.save((err,user)=>{
+        if(err){
+          res.statusCode = 500;
+          res.setHeader('content-type','application/json');
+          res.json({err:err});
+          return;
+        }
+        passport.authenticate('local')(req,res,()=>{
         res.statusCode = 200;
         res.setHeader('content-type','application/json');
         res.json({success:true,status:'Registration Succsessful'});
+        });
       });
     }
   });
-  
 });
 
 router.post('/login',passport.authenticate('local'),(req,res)=>{
