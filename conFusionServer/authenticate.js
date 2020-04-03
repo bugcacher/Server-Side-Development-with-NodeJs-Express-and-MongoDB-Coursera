@@ -36,3 +36,15 @@ exports.jwtPassport = passport.use(new JWTStrategy(opts,
     }));
 
 exports.verifyUser = passport.authenticate('jwt',{session:false});
+
+exports.verifyAdmin = function(req,res,next){
+    if(req.user.admin)
+    return next();
+    else{
+        var err = new Error('You do not have Administrative rights.');
+        err.status = 403;
+        next(err);  
+    }
+    
+        
+};
