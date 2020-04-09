@@ -1,0 +1,50 @@
+const express = require('express');
+
+const bodyParser = require('body-parser');
+
+const leaderRouter = express.Router();
+
+leaderRouter.use(bodyParser.json());
+leaderRouter.route('/')
+.all((req,res,next)=>{
+    res.statusCode = 200;
+    res.setHeader('Content-Type',"text/plain")
+    next();
+})
+.get((req,res,next)=>{
+    res.end('All the leaders will be sent to you.');
+})
+.put((req,res,next)=>{
+    res.statusCode = 403;
+    res.end('Invalid request : Can not perform PUT on /leaders');
+})
+.post((req,res,next)=>{
+    res.end('Leader '+req.body.name +' with details : '+req.body.description +' will be added.');
+})
+.delete((req,res,next)=>{
+    res.end('All the leaders will be deleted.');
+});
+
+
+leaderRouter.route('/:leaderId')
+.all((req,res,next)=>{
+    res.statusCode = 200;
+    res.setHeader('Content-Type',"text/plain")
+    next();
+})
+.get((req,res,next)=>{
+    res.end('Leader with id:' +req.params.leaderId +' will be sent to you.');
+})
+.put((req,res,next)=>{
+    res.write('Updating the leader: '+req.params.leaderId);
+    res.end(' Leader '+req.body.name +'with details : '+req.body.description +' will be updated.');
+})
+.post((req,res,next)=>{
+    res.statusCode = 403;
+    res.end('Invalid request : Can not perform POST on /leaders/'+req.params.leaderId);
+})
+.delete((req,res,next)=>{
+    res.end('Leader with id:' +req.params.leaderId +' will be deleted.');
+});
+
+module.exports = leaderRouter;
